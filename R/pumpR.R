@@ -39,8 +39,32 @@ Le.11d <- 10
 Le.tee.thru <- 20
 Le.tee.branch <- 60
 
+
+#' calculates the unit hydraulic gradient
+#'
+#' @param D Pipe diameter, in inches
+#' @param C Hazen-Williams friction factor, unitless
+#'
+#' @return the hydraulic gradient per linear foot.
+#' @export
+#'
+#' @examples
+#' # Calculate the k for 1000 LF of 12-inch diameter pipe with C = 120
+#' 1000*ke(12,120)
 ke <- function(D,C){return(10.44/C^1.85/D^4.87)}
 
+
+#' Calculate the equivalent hydraulic gradient (k) for parallel pipes
+#'
+#' @param k1 hydraulic gradient for a pipe segment
+#' @param k2 hydraulic gradient for a pipe segment
+#'
+#' @return the equivalent hydraulic gradient (k) for parallel pipes
+#' @export
+#'
+#' @examples
+#' # Find the equiv k for 1,000 LF of twin 12-inch pipes at C=130
+#' 2000*keq(ke(12,130),ke(12,130))
 keq <- function(k1, k2) {
   k1_ <- (1/k1)^(1/1.85)
   k2_ <- (1/k2)^(1/1.85)
@@ -52,6 +76,15 @@ keq <- function(k1, k2) {
 # Planning Formulas -------------------------------------------------------
 
 
+#' Calculates the peaking factor for a given ADF, in GPD, using the 10-state peaking factor method
+#'
+#' @param GPD Average Daily Flow (ADF), in GPD
+#'
+#' @return peaking factor, unitless
+#' @export
+#'
+#' @examples
+#' PF(1e6)
 PF <- function(GPD) {
   MGD <- GPD/1e6
 
@@ -61,6 +94,16 @@ PF <- function(GPD) {
 
 }
 
+
+#' Peak Hour Flow (PHF)
+#'
+#' @param GPD Average Daily Flow (ADF), in GPD
+#'
+#' @return Peak Hour Flow (PHF), in GPM, using the 10-state peaking factor method
+#' @export
+#'
+#' @examples
+#' PHF(1e6)
 PHF <- function(GPD) {
   PF <- PF(GPD)
   PHF <- GPD*PF/1440
@@ -69,12 +112,32 @@ PHF <- function(GPD) {
 
 }
 
+
+#' Calculate Average Daily Flow (ADF) from Peak Hour Flow (PHF)
+#'
+#' @param GPM Peak Hour Flow (PHF), in GPM
+#'
+#' @return Average Daily Flow (ADF), in MGD, using 10-state peaking factor method
+#' @export
+#'
+#' @examples
+#' ADF(1000)
 ADF <- function(GPM) {
   tmp <- uniroot(function(x) PHF(x)-GPM,c(0,1E9))$root/1e6
 
   return(tmp)
 }
 
+#' Calculate pipe velocity
+#'
+#' @param Q_gpm Pipe flow, in GPM
+#' @param D_inches Pipe diameter, in inches
+#'
+#' @return pipe velocity, in FPS
+#' @export
+#'
+#' @examples
+#' v(1000,12)
 v <- function(Q_gpm, D_inches) {
   v_ <- 0.408*Q_gpm/D_inches^2
 
