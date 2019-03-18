@@ -156,7 +156,7 @@ v <- function(Q_gpm, D_inches) {
 #' @param linecolor optional
 #' @param linetype optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
@@ -176,10 +176,13 @@ Draw.System.Curve <- function(k, S, linecolor="red", linetype=1){
 #' @param color optional
 #' @param linetype optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph(500,100,25, 150,50,10)
+#' pump <- New.Pump(c(0, 100,50,80, 100,60,150,40,200,20))
+#' Draw.Pump(pump,2)
 Draw.Pump <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
 
   for (count in 1:numPumps) {
@@ -197,10 +200,12 @@ Draw.Pump <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
 #' @param text_color optional
 #' @param TextSize optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph()
+#' Text.Highlight(3000,50, "Test Point")
 Text.Highlight <- function(Q,H,text,highlight_color="white", text_color="red", TextSize=0.75) {
 
   lims <- par("usr")
@@ -225,10 +230,12 @@ Text.Highlight <- function(Q,H,text,highlight_color="white", text_color="red", T
 #' @param H Head, FT
 #' @param color optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph()
+#' Draw.Point(3000,50)
 Draw.Point <- function (Q, H, color="red") {
   Fill <- 2/3
 
@@ -255,10 +262,12 @@ Draw.Point <- function (Q, H, color="red") {
 #' @param color optional
 #' @param DPLabel optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph()
+#' Draw.Label.Point(3000,50)
 Draw.Label.Point <- function (Q, H, color="red", DPLabel="Capacity") {
   Draw.Point(Q, H, color)
   Text_ <- paste0(DPLabel,"\n",round(Q,-1), " GPM @ ", round(H,0), " FT TDH")
@@ -366,10 +375,19 @@ Draw.Graph <- function(Max.Q=15000, Major.Q=1500,Minor.Q=250, Max.H=250,Major.H=
 #' @param color optional
 #' @param linetype optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph(500,100,25, 150,50,10)
+#' pump <- New.Pump(c(
+#'   0, 100,
+#'  50,  80,
+#' 100,  60,
+#' 150,  40,
+#' 200,  20
+#' ))
+#' Draw.VFD(pump, 2)
 Draw.VFD <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
   color.light = paste0(color,"33")
 
@@ -413,6 +431,8 @@ Draw.VFD <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
 #' @export
 #'
 #' @examples
+#' pump <- New.Pump(c(0, 100,50,80, 100,60,150,40,200,20))
+#' Get.Head(pump,76)
 Get.Head <- function(PumpCurve, Q) {
   if(sum(PumpCurve[,1]>0)){
     ret <- approx(PumpCurve, xout=Q)$y}
@@ -432,14 +452,16 @@ Get.Head <- function(PumpCurve, Q) {
 #' @export
 #'
 #' @examples
+#' pump <- New.Pump(c(0, 100,50,80, 100,60,150,40,200,20))
+#' Get.Head(pump,75)
 Get.Flow <- function(PumpCurve, H) {approx(PumpCurve[,2], PumpCurve[,1], xout=H, rule=2)$y}
 
 #' New Pump Object
 #'
 #' @param QH vector of flow and head by row
-#' @param n
+#' @param n number of pumps
 #'
-#' @return
+#' @return Pump Flow, in GPM
 #' @export
 #'
 #' @examples
@@ -459,15 +481,17 @@ New.Pump <- function (QH, n=1) {
   return(pump)
 }
 
-#' Adjut pump curve for VFD speed
+#' Adjust pump curve for VFD speed
 #'
 #' @param pumpc pump object from New.Pumps
 #' @param Hz VFD Speed, in Hz
 #'
-#' @return
+#' @return Pump Curve
 #' @export
 #'
-#' @examples
+#' @examples#'
+#' pump <- New.Pump(c(0, 100,50,80, 100,60,150,40,200,20))
+#' VFD(pump,45)
 VFD <- function(pumpc = pump, Hz) {
   tmpQ <- pumpc[,1]*Hz/60
   tmpH <- pumpc[,2]*(Hz/60)^2
@@ -485,10 +509,13 @@ VFD <- function(pumpc = pump, Hz) {
 #' @param color optional
 #' @param max.Q optional
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph(500,100,25, 150,50,10)
+#' sc <- matrix(c(2.5E-4,5,46.2e-4,25), nrow=2, byrow=TRUE)
+#' Draw.System.Envelope(sc)
 Draw.System.Envelope <- function(sc, linetype=1, color=JEA.Grey, max.Q = 5000) {
 
   color.light = paste0(color,"22")
@@ -509,10 +536,14 @@ Draw.System.Envelope <- function(sc, linetype=1, color=JEA.Grey, max.Q = 5000) {
 #' @param pump pump object from New.Pumps()
 #' @param Q Target Flow, in GPM
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph(500,100,25, 150,50,10)
+#' pump <- New.Pump(c(0, 100,50,80, 100,60,150,40,200,20))
+#' Draw.Pump(pump, 2)
+#' Draw.Flow(pump,125)
 Draw.Flow <- function(pump,Q) {
   H <- Get.Head(pump,Q)
   lines(c(0,Q,Q), c(H,H,0), lwd=2, col="orange")
@@ -529,10 +560,12 @@ Draw.Flow <- function(pump,Q) {
 #' @param PointSymbol Vector of symbols (see pch)
 #' @param LineWeight vector of Line weights
 #'
-#' @return
+#' @return Plot
 #' @export
 #'
 #' @examples
+#' Draw.Graph()
+#' Draw.Legend("top", c("Field", "Model"), c("black", "blue"), c(1,2))
 Draw.Legend <- function(position="bottomleft",LineText, LineColor, LineType, PointSymbol=rep(NA,length(LineType)), LineWeight=rep(2,length(LineType))) {
   legend(position
          , LineText#, c("A: ROOSEVELT BV 1013' N OF 120TH ST (87049)", "A corrected to B location (C=90)", "B: GOLDEN WINGS RD 283' W OF NORMAN ST (242321)", "A corrected to furthest node (C=135)")
@@ -562,10 +595,12 @@ Draw.Legend <- function(position="bottomleft",LineText, LineColor, LineType, Poi
 #' @param max optional, minima quantile
 #' @param min.flow min.flow for dynamic headloss calculation
 #'
-#' @return
+#' @return system curve object
 #' @export
 #'
 #' @examples
+#' data <- data.frame(Q=c(rnorm(abs(rnorm(100,0))),rnorm(100,500)), H=c(rnorm(100,20), rnorm(100,100)))
+#' Get.System.Curve(data$Q, data$H)
 Get.System.Curve <- function(Q,TDH,min=0.05, max=0.95, min.flow=10) {
   H <- TDH[Q<min.flow]
   H[H<0] <- NA
@@ -601,10 +636,12 @@ Get.System.Curve <- function(Q,TDH,min=0.05, max=0.95, min.flow=10) {
 #' @param SC System curve object
 #' @param MaxPSI maximum allowable Pressure
 #'
-#' @return
+#' @return Flow, in GPM
 #' @export
 #'
 #' @examples
+#' data <- data.frame(Q=c(rnorm(abs(rnorm(100,0))),rnorm(100,500)), H=c(rnorm(100,20), rnorm(100,100)))
+#' Get.System.Curve(data$Q, data$H)
 MAF <- function(SC, MaxPSI = 60) {
   Q <- ((MaxPSI*2.31-SC[2,2])/SC[2,1])^(1/1.85)
 
