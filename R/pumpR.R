@@ -149,6 +149,19 @@ v <- function(Q_gpm, D_inches) {
 # DRAW functions ----------------------------------------------------------
 
 
+#' Draws a system curve
+#'
+#' @param k hydraulic gradient
+#' @param S static head
+#' @param linecolor optional
+#' @param linetype optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' Draw.Graph()
+#' Draw.System.Curve(5000*ke(6,120),10)
 Draw.System.Curve <- function(k, S, linecolor="red", linetype=1){
   Q <- seq(0,100000,10)
   HL <- k*Q^1.85+S
@@ -156,6 +169,17 @@ Draw.System.Curve <- function(k, S, linecolor="red", linetype=1){
 
 }
 
+#' Draw Pump Curve
+#'
+#' @param PumpCurve pump object from New.Pump()
+#' @param numPumps Number of parallel pumps to draw
+#' @param color optional
+#' @param linetype optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.Pump <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
 
   for (count in 1:numPumps) {
@@ -164,157 +188,19 @@ Draw.Pump <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
 
 }
 
-Merge.Pumps.VFD <- function (
-  pump1 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump2 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump3 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump4 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump5 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump6 = matrix(c(0,1,0,1),ncol=2, byrow=F)
-) {
-
-  H <- seq(200,0,-1)
-  Q1 <- approx(pump1[,2], pump1[,1], xout=H)$y
-  Q2 <- approx(pump2[,2], pump2[,1], xout=H)$y
-  Q3 <- approx(pump3[,2], pump3[,1], xout=H)$y
-  Q4 <- approx(pump4[,2], pump4[,1], xout=H)$y
-  Q5 <- approx(pump5[,2], pump5[,1], xout=H)$y
-  Q6 <- approx(pump6[,2], pump6[,1], xout=H)$y
-
-  Q1[is.na(Q1)]=0
-  Q2[is.na(Q2)]=0
-  Q3[is.na(Q3)]=0
-  Q4[is.na(Q4)]=0
-  Q5[is.na(Q5)]=0
-  Q6[is.na(Q6)]=0
-
-  Q1 <- Q1
-  Q2 <- Q1+Q2
-  Q3 <- Q2+Q3
-  Q4 <- Q3+Q4
-  Q5 <- Q4+Q5
-  Q6 <- Q5+Q6
-
-  Q1 <- Q1*if(is.null(colnames(pump1))) 0 else 1
-  Q2 <- Q2*if(is.null(colnames(pump2))) 0 else 1
-  Q3 <- Q3*if(is.null(colnames(pump3))) 0 else 1
-  Q4 <- Q4*if(is.null(colnames(pump4))) 0 else 1
-  Q5 <- Q5*if(is.null(colnames(pump5))) 0 else 1
-  Q6 <- Q6*if(is.null(colnames(pump6))) 0 else 1
-
-  P1 <- matrix(c(Q1,H), ncol=2, byrow=F)
-  P2 <- matrix(c(Q2,H), ncol=2, byrow=F)
-  P3 <- matrix(c(Q3,H), ncol=2, byrow=F)
-  P4 <- matrix(c(Q4,H), ncol=2, byrow=F)
-  P5 <- matrix(c(Q5,H), ncol=2, byrow=F)
-  P6 <- matrix(c(Q6,H), ncol=2, byrow=F)
-
-  P1.min <- match(min(P1[P1[,1]>0,1]), P1[,1])-1
-  P1.max <- match(max(P1[,1]), P1[,1])
-  P2.min <- match(min(P2[P2[,1]>0,1]), P2[,1])-1
-  P2.max <- match(max(P2[,1]), P2[,1])
-  P3.min <- match(min(P3[P3[,1]>0,1]), P3[,1])-1
-  P3.max <- match(max(P3[,1]), P3[,1])
-  P4.min <- match(min(P4[P4[,1]>0,1]), P4[,1])-1
-  P4.max <- match(max(P4[,1]), P4[,1])
-  P5.min <- match(min(P5[P5[,1]>0,1]), P5[,1])-1
-  P5.max <- match(max(P5[,1]), P5[,1])
-  P6.min <- match(min(P6[P6[,1]>0,1]), P6[,1])-1
-  P6.max <- match(max(P6[,1]), P6[,1])
-
-
-  if(!is.na(P1.min)) P1 <- P1[P1.min:P1.max,]
-  if(!is.na(P2.min)) P2 <- P2[P2.min:P2.max,]
-  if(!is.na(P3.min)) P3 <- P3[P3.min:P3.max,]
-  if(!is.na(P4.min)) P4 <- P4[P4.min:P4.max,]
-  if(!is.na(P5.min)) P5 <- P5[P5.min:P5.max,]
-  if(!is.na(P6.min)) P6 <- P6[P6.min:P6.max,]
-
-  Draw.VFD(P1)
-  Draw.VFD(P2)
-  Draw.VFD(P3)
-  Draw.VFD(P4)
-  Draw.VFD(P5)
-  Draw.VFD(P6)
-
-}
-
-Merge.Pumps <- function (
-  pump1 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump2 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump3 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump4 = matrix(c(0,0,0,0),ncol=2, byrow=F),
-  pump5 = matrix(c(0,0,0,0),ncol=2, byrow=F),
-  pump6 = matrix(c(0,0,0,0),ncol=2, byrow=F)
-) {
-
-  H <- seq(200,0,-1)
-
-  if(max(pump1)==0) {Q1 <- NA} else {Q1 <- approx(pump1[,2], pump1[,1], xout=H)$y}
-  if(max(pump2)==0) {Q2 <- NA} else {Q2 <- approx(pump2[,2], pump2[,1], xout=H)$y}
-  if(max(pump3)==0) {Q3 <- NA} else {Q3 <- approx(pump3[,2], pump3[,1], xout=H)$y}
-  if(max(pump4)==0) {Q4 <- NA} else {Q4 <- approx(pump4[,2], pump4[,1], xout=H)$y}
-  if(max(pump5)==0) {Q5 <- NA} else {Q5 <- approx(pump5[,2], pump5[,1], xout=H)$y}
-  if(max(pump6)==0) {Q6 <- NA} else {Q6 <- approx(pump6[,2], pump6[,1], xout=H)$y}
-
-  Q1[is.na(Q1)]=0
-  Q2[is.na(Q2)]=0
-  Q3[is.na(Q3)]=0
-  Q4[is.na(Q4)]=0
-  Q5[is.na(Q5)]=0
-  Q6[is.na(Q6)]=0
-
-  Q1 <- Q1
-  Q2 <- Q1+Q2
-  Q3 <- Q2+Q3
-  Q4 <- Q3+Q4
-  Q5 <- Q4+Q5
-  Q6 <- Q5+Q6
-
-  Q1 <- Q1*if(is.null(colnames(pump1))) 0 else 1
-  Q2 <- Q2*if(is.null(colnames(pump2))) 0 else 1
-  Q3 <- Q3*if(is.null(colnames(pump3))) 0 else 1
-  Q4 <- Q4*if(is.null(colnames(pump4))) 0 else 1
-  Q5 <- Q5*if(is.null(colnames(pump5))) 0 else 1
-  Q6 <- Q6*if(is.null(colnames(pump6))) 0 else 1
-
-  P1 <- matrix(c(Q1,H), ncol=2, byrow=F)
-  P2 <- matrix(c(Q2,H), ncol=2, byrow=F)
-  P3 <- matrix(c(Q3,H), ncol=2, byrow=F)
-  P4 <- matrix(c(Q4,H), ncol=2, byrow=F)
-  P5 <- matrix(c(Q5,H), ncol=2, byrow=F)
-  P6 <- matrix(c(Q6,H), ncol=2, byrow=F)
-
-  P1.min <- match(min(P1[P1[,1]>0,1]), P1[,1])-1
-  P1.max <- match(max(P1[,1]), P1[,1])
-  P2.min <- match(min(P2[P2[,1]>0,1]), P2[,1])-1
-  P2.max <- match(max(P2[,1]), P2[,1])
-  P3.min <- match(min(P3[P3[,1]>0,1]), P3[,1])-1
-  P3.max <- match(max(P3[,1]), P3[,1])
-  P4.min <- match(min(P4[P4[,1]>0,1]), P4[,1])-1
-  P4.max <- match(max(P4[,1]), P4[,1])
-  P5.min <- match(min(P5[P5[,1]>0,1]), P5[,1])-1
-  P5.max <- match(max(P5[,1]), P5[,1])
-  P6.min <- match(min(P6[P6[,1]>0,1]), P6[,1])-1
-  P6.max <- match(max(P6[,1]), P6[,1])
-
-
-  if(!is.na(P1.min)) P1 <- P1[P1.min:P1.max,]
-  if(!is.na(P2.min)) P2 <- P2[P2.min:P2.max,]
-  if(!is.na(P3.min)) P3 <- P3[P3.min:P3.max,]
-  if(!is.na(P4.min)) P4 <- P4[P4.min:P4.max,]
-  if(!is.na(P5.min)) P5 <- P5[P5.min:P5.max,]
-  if(!is.na(P6.min)) P6 <- P6[P6.min:P6.max,]
-
-  #
-  # lines(P1, lwd=2, lty=1, col=JEA.Blue)
-  # lines(P2, lwd=2, lty=1, col=JEA.Blue)
-  # lines(P3, lwd=2, lty=1, col=JEA.Blue)
-  # lines(P4, lwd=2, lty=1, col=JEA.Blue)
-  # lines(P5, lwd=2, lty=1, col=JEA.Blue)
-  # lines(P6, lwd=2, lty=1, col=JEA.Blue)
-}
-
+#'  Draws Text to Screen
+#'
+#' @param Q Flow, GPM
+#' @param H Head, FT
+#' @param text Text to display
+#' @param highlight_color optional
+#' @param text_color optional
+#' @param TextSize optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Text.Highlight <- function(Q,H,text,highlight_color="white", text_color="red", TextSize=0.75) {
 
   lims <- par("usr")
@@ -333,28 +219,16 @@ Text.Highlight <- function(Q,H,text,highlight_color="white", text_color="red", T
 
 }
 
-User.Text.Highlight <- function(text,pos=4,highlight_color="white", text_color="red", TextSize=0.75) {
-  loc <- locator(1)
-
-  Q <- loc$x
-  H <- loc$y
-
-  lims <- par("usr")
-  scale <- dev.size()
-  scale <- scale[1]/scale[2]
-
-
-  Q_offset <- (lims[2]-lims[1])*0.001
-  H_offset <- (lims[4]-lims[3])*0.001*scale
-
-  text(Q+Q_offset, H-H_offset, text, col=highlight_color, pos=pos, font=2, cex=TextSize)
-  text(Q+Q_offset, H+H_offset, text, col=highlight_color, pos=pos, font=2, cex=TextSize)
-  text(Q-Q_offset, H-H_offset, text, col=highlight_color, pos=pos, font=2, cex=TextSize)
-  text(Q-Q_offset, H+H_offset, text, col=highlight_color, pos=pos, font=2, cex=TextSize)
-  text(Q, H, text, col=text_color, pos=pos, font=2, cex=TextSize)
-
-}
-
+#' Draw duty point to graph
+#'
+#' @param Q Flow, GPM
+#' @param H Head, FT
+#' @param color optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.Point <- function (Q, H, color="red") {
   Fill <- 2/3
 
@@ -374,12 +248,40 @@ Draw.Point <- function (Q, H, color="red") {
 }
 
 
+#' Draw Duty Point to Graph with label
+#'
+#' @param Q Flow, GPM
+#' @param H Head, FT
+#' @param color optional
+#' @param DPLabel optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.Label.Point <- function (Q, H, color="red", DPLabel="Capacity") {
   Draw.Point(Q, H, color)
   Text_ <- paste0(DPLabel,"\n",round(Q,-1), " GPM @ ", round(H,0), " FT TDH")
   Text.Highlight(Q,H,Text_,,color)
 }
 
+#' Draws the framework for the pumpR style H-Q plot
+#'
+#' @param Max.Q   Maximum Flow (GPM)
+#' @param Major.Q Major Flow Axis (GPM)
+#' @param Minor.Q Minor Flow Axis (GPM)
+#' @param Max.H   Maximum Head (FT)
+#' @param Major.H Major Head Axis (FT)
+#' @param Minor.H Minor Head Axis (FT)
+#' @param AWRMP   Boolean, Add Planning Caveat to plot
+#' @param MGD     Boolean, Add addition flow axis for MGD
+#' @param TDH     Boolean, set y-axis label to FT TDH (TRUE) or FT (FALSE)
+#'
+#' @return None
+#' @export
+#' @seealso Draw.Pump
+#' @examples
+#' Draw.Graph(1000,200,50,250,50,10)
 Draw.Graph <- function(Max.Q=15000, Major.Q=1500,Minor.Q=250, Max.H=250,Major.H=50,Minor.H=10,AWRMP=FALSE,MGD=FALSE, TDH=TRUE){
   #Max.Q <- 15000
   #Max.H <- 250
@@ -457,6 +359,17 @@ Draw.Graph <- function(Max.Q=15000, Major.Q=1500,Minor.Q=250, Max.H=250,Major.H=
 
 }
 
+#' Draw Pump with VFD envelope
+#'
+#' @param PumpCurve pump object from New.Pump()
+#' @param numPumps Number of parallel pumps to draw
+#' @param color optional
+#' @param linetype optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.VFD <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
   color.light = paste0(color,"33")
 
@@ -489,152 +402,17 @@ Draw.VFD <- function(PumpCurve, numPumps = 1, color = JEA.Blue, linetype=1){
 
 }
 
-
-# COMBINE functions -------------------------------------------------------
-
-
-Combine.Pumps <- function(pump1, pump2) {
-  MaxH <- 300
-
-  H <- seq(300,0,-1)
-
-  Q1 <- approx(pump1[,2], pump1[,1], xout=H)$y
-  Q2 <- approx(pump2[,2], pump2[,1], xout=H)$y
-
-  Q <- Q1 + Q2
-
-  pump <- matrix(c(Q,H), ncol=2,byrow=FALSE)
-  colnames(pump) <- c("Q","H")
-
-  return(pump)
-}
-
-Derate.Pump <- function(pump,k,S) {
-  pump.Q <- pump[,1]
-  pump.H <- pump[,2] - k*pump.Q^1.85 - S
-
-  dpump <- matrix(c(pump.Q, pump.H), ncol=2, byrow=FALSE)
-  colnames(dpump) <- c("Q", "H")
-
-  return(dpump)
-}
-
-Get.Intercept <- function(pump,k,S) {
-  dpump <- Derate.Pump(pump,k,S)
-  Q <- Get.Flow(dpump,0)
-  H <- Get.Head(pump,Q)
-
-  point <- t(as.matrix(c(Q,H)))
-  colnames(point) <- c("Q", "H")
-
-  return(c(Q,H))
-}
-
-Get.2p.System.Curve <- function(Q,H,S) {return((H-S)/Q^1.85)}
-
-Two.Pump.System <- function(pump1, k1, S1, pump2, k2, S2, kT, ST) {
-
-  dp1 <- Derate.Pump(pump1, k1, S1)
-  dp2 <- Derate.Pump(pump2, k2, S2)
-  dpT <- Combine.Pumps(dp1, dp2)
-  H <- Get.Intercept(dpT, kT, ST)[2]
-  Q1 <- Get.Flow(dp1, H)
-  Q2 <- Get.Flow(dp2, H)
-  H1 <- Get.Head(pump1,Q1)
-  H2 <- Get.Head(pump2,Q2)
-  M1 <- kT*Q2^1.85
-  M2 <- kT*Q1^1.85
-  S1 <- S1 + M1
-  S2 <- S2 + M2
-  rk1 <- Get.2p.System.Curve(Q1, H1, S1)
-  rk2 <- Get.2p.System.Curve(Q2, H2, S2)
-
-  summary <- matrix(c(Q1, H1, rk1, S1, Q2, H2, rk2, S2), ncol=4, byrow=TRUE)
-  colnames(summary) <- c("Q", "H", "k", "S")
-  rownames(summary) <- c("pump1", "pump2")
-
-  return(summary)
-}
-
-Add.Pumps <- function (
-  pump1 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump2 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump3 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump4 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump5 = matrix(c(0,1,0,1),ncol=2, byrow=F),
-  pump6 = matrix(c(0,1,0,1),ncol=2, byrow=F)
-) {
-
-  H <- seq(300,0,-1)
-  Q1 <- approx(pump1[,2], pump1[,1], xout=H)$y
-  Q2 <- approx(pump2[,2], pump2[,1], xout=H)$y
-  Q3 <- approx(pump3[,2], pump3[,1], xout=H)$y
-  Q4 <- approx(pump4[,2], pump4[,1], xout=H)$y
-  Q5 <- approx(pump5[,2], pump5[,1], xout=H)$y
-  Q6 <- approx(pump6[,2], pump6[,1], xout=H)$y
-
-  Q1[is.na(Q1)]=0
-  Q2[is.na(Q2)]=0
-  Q3[is.na(Q3)]=0
-  Q4[is.na(Q4)]=0
-  Q5[is.na(Q5)]=0
-  Q6[is.na(Q6)]=0
-
-  Q1 <- Q1
-  Q2 <- Q1+Q2
-  Q3 <- Q2+Q3
-  Q4 <- Q3+Q4
-  Q5 <- Q4+Q5
-  Q6 <- Q5+Q6
-
-  Q1 <- Q1*if(is.null(colnames(pump1))) 0 else 1
-  Q2 <- Q2*if(is.null(colnames(pump2))) 0 else 1
-  Q3 <- Q3*if(is.null(colnames(pump3))) 0 else 1
-  Q4 <- Q4*if(is.null(colnames(pump4))) 0 else 1
-  Q5 <- Q5*if(is.null(colnames(pump5))) 0 else 1
-  Q6 <- Q6*if(is.null(colnames(pump6))) 0 else 1
-
-  P1 <- matrix(c(Q1,H), ncol=2, byrow=F)
-  P2 <- matrix(c(Q2,H), ncol=2, byrow=F)
-  P3 <- matrix(c(Q3,H), ncol=2, byrow=F)
-  P4 <- matrix(c(Q4,H), ncol=2, byrow=F)
-  P5 <- matrix(c(Q5,H), ncol=2, byrow=F)
-  P6 <- matrix(c(Q6,H), ncol=2, byrow=F)
-
-  #   P1.min <- match(min(P1[P1[,1]>0,1]), P1[,1])-1
-  #   P1.max <- match(max(P1[,1]), P1[,1])
-  #   P2.min <- match(min(P2[P2[,1]>0,1]), P2[,1])-1
-  #   P2.max <- match(max(P2[,1]), P2[,1])
-  #   P3.min <- match(min(P3[P3[,1]>0,1]), P3[,1])-1
-  #   P3.max <- match(max(P3[,1]), P3[,1])
-  #   P4.min <- match(min(P4[P4[,1]>0,1]), P4[,1])-1
-  #   P4.max <- match(max(P4[,1]), P4[,1])
-  #   P5.min <- match(min(P5[P5[,1]>0,1]), P5[,1])-1
-  #   P5.max <- match(max(P5[,1]), P5[,1])
-  #   P6.min <- match(min(P6[P6[,1]>0,1]), P6[,1])-1
-  #   P6.max <- match(max(P6[,1]), P6[,1])
-  #
-  #
-  #   if(!is.na(P1.min)) P1 <- P1[P1.min:P1.max,]
-  #   if(!is.na(P2.min)) P2 <- P2[P2.min:P2.max,]
-  #   if(!is.na(P3.min)) P3 <- P3[P3.min:P3.max,]
-  #   if(!is.na(P4.min)) P4 <- P4[P4.min:P4.max,]
-  #   if(!is.na(P5.min)) P5 <- P5[P5.min:P5.max,]
-  #   if(!is.na(P6.min)) P6 <- P6[P6.min:P6.max,]
-
-  return(P4)
-  #
-  #   lines(P1, lwd=2, lty=1, col=JEA.Blue)
-  #   lines(P2, lwd=2, lty=1, col=JEA.Blue)
-  #   lines(P3, lwd=2, lty=1, col=JEA.Blue)
-  #   lines(P4, lwd=2, lty=1, col=JEA.Blue)
-  #   lines(P5, lwd=2, lty=1, col=JEA.Blue)
-  #   lines(P6, lwd=2, lty=1, col=JEA.Blue)
-}
-
-
 # GET/SET/NEW functions -----------------------------------------------------------
 
+#' get Head at Flow
+#'
+#' @param PumpCurve pump object from New.Pump()
+#' @param Q Flow, GPM
+#'
+#' @return Head, in FT
+#' @export
+#'
+#' @examples
 Get.Head <- function(PumpCurve, Q) {
   if(sum(PumpCurve[,1]>0)){
     ret <- approx(PumpCurve, xout=Q)$y}
@@ -645,8 +423,33 @@ Get.Head <- function(PumpCurve, Q) {
   return(ret)
 }
 
+#' Get Flow from Head
+#'
+#' @param PumpCurve pump object from New.Pump()
+#' @param H Head, in FT
+#'
+#' @return Flow, in GPM
+#' @export
+#'
+#' @examples
 Get.Flow <- function(PumpCurve, H) {approx(PumpCurve[,2], PumpCurve[,1], xout=H, rule=2)$y}
 
+#' New Pump Object
+#'
+#' @param QH vector of flow and head by row
+#' @param n
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' New.Pump(c(
+#'   0, 100,
+#'  50,  80,
+#' 100,  60,
+#' 150,  40,
+#' 200,  20
+#' ))
 New.Pump <- function (QH, n=1) {
   PumpCurve <- matrix(data=QH, ncol=2, byrow = TRUE)
   PumpCurve[,1] <- PumpCurve[,1]*n #number of pumps
@@ -656,6 +459,15 @@ New.Pump <- function (QH, n=1) {
   return(pump)
 }
 
+#' Adjut pump curve for VFD speed
+#'
+#' @param pumpc pump object from New.Pumps
+#' @param Hz VFD Speed, in Hz
+#'
+#' @return
+#' @export
+#'
+#' @examples
 VFD <- function(pumpc = pump, Hz) {
   tmpQ <- pumpc[,1]*Hz/60
   tmpH <- pumpc[,2]*(Hz/60)^2
@@ -666,6 +478,17 @@ VFD <- function(pumpc = pump, Hz) {
   return(tmp)
 }
 
+#' Draw Enevlope of min.max system curve
+#'
+#' @param sc System Curve Object from Get.System.Curve()
+#' @param linetype optional
+#' @param color optional
+#' @param max.Q optional
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.System.Envelope <- function(sc, linetype=1, color=JEA.Grey, max.Q = 5000) {
 
   color.light = paste0(color,"22")
@@ -681,6 +504,15 @@ Draw.System.Envelope <- function(sc, linetype=1, color=JEA.Grey, max.Q = 5000) {
   lines(Q,H2, lwd=2, lty=linetype, col=color)
 }
 
+#' Draw Design Flow/Head lines (ICM Style)
+#'
+#' @param pump pump object from New.Pumps()
+#' @param Q Target Flow, in GPM
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.Flow <- function(pump,Q) {
   H <- Get.Head(pump,Q)
   lines(c(0,Q,Q), c(H,H,0), lwd=2, col="orange")
@@ -688,6 +520,19 @@ Draw.Flow <- function(pump,Q) {
 
 # Graph Template -------------------------------------------
 
+#' Draw Legend
+#'
+#' @param position location on graph, such as "top", "bottomleft", etc...
+#' @param LineText Vector of text to be displayed
+#' @param LineColor Vector of Line Colors
+#' @param LineType Vector of Line Types
+#' @param PointSymbol Vector of symbols (see pch)
+#' @param LineWeight vector of Line weights
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Draw.Legend <- function(position="bottomleft",LineText, LineColor, LineType, PointSymbol=rep(NA,length(LineType)), LineWeight=rep(2,length(LineType))) {
   legend(position
          , LineText#, c("A: ROOSEVELT BV 1013' N OF 120TH ST (87049)", "A corrected to B location (C=90)", "B: GOLDEN WINGS RD 283' W OF NORMAN ST (242321)", "A corrected to furthest node (C=135)")
@@ -709,37 +554,18 @@ Draw.Legend <- function(position="bottomleft",LineText, LineColor, LineType, Poi
 
 # LEGACY functions --------------------------------------------------------
 
-VFD_Envelope <- function(numPumps = 1, color = JEA.Blue, linetype=1){
-  color.light = paste0(color,"33")
-
-  for (count in 1:numPumps) {
-    pump.old <- pump
-
-    PumpCurve[,1] <- pump[,1]*count #number of pumps
-    colnames(PumpCurve) <- c("Q", "H")
-    pump <- as.data.frame(PumpCurve)
-
-    n <- length(VFD(PumpCurve,60)[,1])
-    pp <- VFD(PumpCurve,35)
-    pp <- rbind(pp,VFD(PumpCurve,35)[n,])
-    pp <- rbind(pp,VFD(PumpCurve,40)[n,])
-    pp <- rbind(pp,VFD(PumpCurve,45)[n,])
-    pp <- rbind(pp,VFD(PumpCurve,50)[n,])
-    pp <- rbind(pp,VFD(PumpCurve,55)[n,])
-    pp <- rbind(pp,VFD(PumpCurve,60)[n,])
-    pp <- rbind(pp,VFD(PumpCurve,60)[n:1,])
-    pp <- rbind(pp,VFD(PumpCurve,35)[1,])
-
-    polygon(pp, col=color.light, border=NA)
-    lines(VFD(PumpCurve,60), lwd=2, lty=linetype, col=color)
-    lines(VFD(PumpCurve,35), lwd=2, lty=linetype, col=color)
-
-    pump <- pump.old
-  }
-
-}
-
-
+#' Calc System Curve
+#'
+#' @param Q Vector of flows
+#' @param TDH Vectors of heads
+#' @param min optional, minima quantile
+#' @param max optional, minima quantile
+#' @param min.flow min.flow for dynamic headloss calculation
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Get.System.Curve <- function(Q,TDH,min=0.05, max=0.95, min.flow=10) {
   H <- TDH[Q<min.flow]
   H[H<0] <- NA
@@ -770,6 +596,15 @@ Get.System.Curve <- function(Q,TDH,min=0.05, max=0.95, min.flow=10) {
   return(tbl)
 }
 
+#' Maximum Allowable Flow
+#'
+#' @param SC System curve object
+#' @param MaxPSI maximum allowable Pressure
+#'
+#' @return
+#' @export
+#'
+#' @examples
 MAF <- function(SC, MaxPSI = 60) {
   Q <- ((MaxPSI*2.31-SC[2,2])/SC[2,1])^(1/1.85)
 
