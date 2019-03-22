@@ -650,3 +650,14 @@ MAF <- function(SC, MaxPSI = 60) {
 }
 
 
+#' Import Head/Flow from Model CSV
+#'
+#' @param filename string, file path and name of CSV
+#'
+#' @return data.frame with two columns Q (Flow) and H (Head).
+#' @export
+Import.HQ <- function(filename) {
+  dataset <- read.csv(filename, skip=1, header=T)
+
+  HQ <- data.frame(Q=dataset[,5], H=dataset[,4]-dataset[,3])
+}
