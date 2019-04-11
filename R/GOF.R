@@ -8,13 +8,13 @@
 #' 0.29 to 0.20 \tab Fair \tab Planning \cr
 #' 0.21 or less \tab Poor \tab Screening \cr
 #' }
+#'
+#'
 #' @param mod, vector of model data
 #' @param obs, vector of observed data
 #'
 #' @return Nash-Sutcliffe Coefficient
 #' @export
-#'
-#' @reference Nash, J. E.; Sutcliffe, J. V. (1970). "River flow forecasting through conceptual models part I — A discussion of principles". Journal of Hydrology. 10 (3): 282–290. doi:10.1016/0022-1694(70)90255-6. \url{https://www.sciencedirect.com/science/article/pii/0022169470902556?via%3Dihub}
 #'
 #' @examples
 #' NSE(1:10,1:10)

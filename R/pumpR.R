@@ -28,6 +28,7 @@ JEA.Green <- rgb(t(matrix(c(65, 173, 73)/255)))
 JEA.Orange <- rgb(t(matrix(c(244, 199, 33)/255)))
 JEA.Grey <- rgb(t(matrix(c(109, 110, 113)/255)))
 
+
 # Pipe Headloss Formulas --------------------------------------------------
 
 Le.CV <- 60
@@ -113,20 +114,23 @@ PHF <- function(GPD) {
 }
 
 
+
 #' Calculate Average Daily Flow (ADF) from Peak Hour Flow (PHF)
 #'
-#' @param GPM Peak Hour Flow (PHF), in GPM
+#' @param GPM peak hour flow (PHF) in gpm
 #'
-#' @return Average Daily Flow (ADF), in MGD, using 10-state peaking factor method
+#' @return average daily flow (ADF) in mgd
 #' @export
 #'
 #' @examples
 #' ADF(1000)
 ADF <- function(GPM) {
-  tmp <- uniroot(function(x) PHF(x)-GPM,c(0,1E9))$root/1e6
+  tmp <- stats::uniroot(function(x) PHF(x)-GPM,c(0,1E9))$root/1e6
 
   return(tmp)
 }
+
+
 
 #' Calculate pipe velocity
 #'

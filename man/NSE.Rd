@@ -16,7 +16,7 @@ Nash-Sutcliffe Coefficient
 }
 \description{
 \tabular{ccl}{
-NSE Range      \tab      Calibration Rating      \tab      Model Application \cr
+NSE Range \tab Calibration Rating \tab Model Application \cr
 1.00 to 0.50 \tab Excellent \tab Planning, Prelim Design, Final Design \cr
 0.49 to 0.40 \tab Very Good \tab Planning, Prelim Design, Final Design \cr
 0.39 to 0.30 \tab Good \tab Planning, Prelim Design \cr

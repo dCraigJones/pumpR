@@ -7,10 +7,10 @@
 ADF(GPM)
 }
 \arguments{
-\item{GPM}{Peak Hour Flow (PHF), in GPM}
+\item{GPM}{peak hour flow (PHF) in gpm}
 }
 \value{
-Average Daily Flow (ADF), in MGD, using 10-state peaking factor method
+average daily flow (ADF) in mgd
 }
 \description{
 Calculate Average Daily Flow (ADF) from Peak Hour Flow (PHF)
