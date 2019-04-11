@@ -1,26 +1,3 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Build and Reload Package:  'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
-# Header ------------------------------------------------------------------
-
-#setwd("G:/Financial Services/Corporate Planning/Planning Group/Craig/_PEC/175-33S West Grid - Lenox to Timuquana/2017-07-10 Lenox MPS 10p")
-#.libPaths("G:/Delivery/Shared/ACAD/JonesDC/_Support/RWD")
-
-#library(RColorBrewer)
-
-
 # Standard JEA Colors
 JEA.Dark <- rgb(t(matrix(c(20, 43, 108)/255)))
 JEA.Blue <- rgb(t(matrix(c(0, 106, 151)/255)))
@@ -28,17 +5,6 @@ JEA.Green <- rgb(t(matrix(c(65, 173, 73)/255)))
 JEA.Orange <- rgb(t(matrix(c(244, 199, 33)/255)))
 JEA.Grey <- rgb(t(matrix(c(109, 110, 113)/255)))
 
-
-# Pipe Headloss Formulas --------------------------------------------------
-
-Le.CV <- 60
-Le.GV <- 8
-Le.90d <- 20
-Le.45d <- 16
-Le.22d <- 13
-Le.11d <- 10
-Le.tee.thru <- 20
-Le.tee.branch <- 60
 
 
 #' calculates the unit hydraulic gradient
