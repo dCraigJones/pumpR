@@ -1,7 +1,7 @@
 Package: pumpR
 Type: Package
 Title: Common functions for displaying hydraulic information
-Version: 0.1.0
+Version: 0.1.1
 Author@R: person("Jones", "D. Craig", email="jones.dcraig@gmail.com", role=c("aut", "cre"))
 Author: D. Craig Jones [aut, cre]
 Maintainer: D. Craig Jones <jones.dcraig@gmail.com>
