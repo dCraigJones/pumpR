@@ -562,7 +562,7 @@ Draw.Legend <- function(position="bottomleft",LineText, LineColor, LineType, Poi
 #' @param Q Vector of flows
 #' @param TDH Vectors of heads
 #' @param min optional, minima quantile
-#' @param max optional, minima quantile
+#' @param max optional, maxima quantile
 #' @param min.flow min.flow for dynamic headloss calculation
 #'
 #' @return system curve object

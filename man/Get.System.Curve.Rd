@@ -13,7 +13,7 @@ Get.System.Curve(Q, TDH, min = 0.05, max = 0.95, min.flow = 10)
 
 \item{min}{optional, minima quantile}
 
-\item{max}{optional, minima quantile}
+\item{max}{optional, maxima quantile}
 
 \item{min.flow}{min.flow for dynamic headloss calculation}
 }
