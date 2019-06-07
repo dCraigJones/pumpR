@@ -583,7 +583,7 @@ Get.System.Curve <- function(Q,TDH,min=0.05, max=0.95, min.flow=10) {
   k_ <- na.omit(k_)
 
   S.max <- S
-  k.max <- quantile(k_,0.95)
+  k.max <- quantile(k_,max)
 
   S <- quantile(H,min)
   if(is.na(S)) {S <- 0}
