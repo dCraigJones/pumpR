@@ -262,13 +262,9 @@ Draw.Label.Point <- function (Q, H, color="red", DPLabel="Capacity") {
 #' @examples
 #' Draw.Graph(1000,200,50,250,50,10)
 Draw.Graph <- function(Max.Q=15000, Major.Q=1500,Minor.Q=250, Max.H=250,Major.H=50,Minor.H=10,AWRMP=FALSE,MGD=FALSE, TDH=TRUE){
-  #Max.Q <- 15000
-  #Max.H <- 250
+  # Error Checking
+  if ((!Minor.H<Major.H)|(!Minor.Q<Major.Q)) {stop("Major gridlines must be greater than minor gridlines")}
 
-  #Major.Q <- 1500
-  #Minor.Q <- 250
-  #Major.H <- 50
-  #Minor.H <- 10
 
   Max.P <- floor(Max.H/2.31/10)*10
   Major.P <- max(floor(Major.H/2.31/10),1)*10

@@ -13,3 +13,5 @@ LazyData: true
 Imports:
   stats
 RoxygenNote: 6.1.0
+Suggests: 
+    testthat (>= 2.1.0)
